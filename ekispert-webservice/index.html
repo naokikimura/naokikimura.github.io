@@ -23,6 +23,7 @@
             if (this.status == 200) {
               console.log(this.response);
               console.log(this.response.ResultSet.ResourceURI);
+              var win = window.open(this.response.ResultSet.ResourceURI);
               var iframe = document.getElementById("result");
               iframe.src = this.response.ResultSet.ResourceURI;
             }
