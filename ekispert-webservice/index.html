@@ -3,85 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>モックアップ</title>
-  <style type="text/css">
-    #result {
-      position: relative;
-      width: 25em;
-    }
-    #result iframe {
-      width: 100%;
-      height: 25em;
-      box-shadow: 1ex 1ex 0.5ex silver;
-      transition-property: height, box-shadow;
-      transition-duration: 1s;
-      transition-timing-function: ease-out;
-      transition-delay: 0.5s;
-    }
-    #result.hidden iframe {
-      height: 0em;
-    }
-    #result .close {
-      position: absolute;
-      right: -1ex;
-      top: -1ex;
-      background-color: rgba(255, 255, 255, .8);
-      transition-property: opacity, visibility;
-      transition-duration: 1s;
-      transition-timing-function: ease-out;
-      transition-delay: 0.5s;
-    }
-    #result.hidden .close {
-      opacity: 0;
-      visibility: hidden;
-    }
-  </style>
-  <script type="text/javascript">
-    window.onload = function () {
-      document.getElementById("date").value = new Date().toISOString().substring(0, 10);
-      var figure = document.getElementById("result");
-      var iframe = figure.querySelector("iframe");
-      var a = figure.querySelector(".close");
-      a.addEventListener("click", function (e) {
-        figure.classList.add("hidden");
-      });
-      iframe.addEventListener("load", function (e) {
-        figure.classList.remove("hidden");
-      });
-      var button = document.getElementById("search");
-      button.addEventListener("click", function (e) {
-        console.log("search");
-        figure.classList.add("hidden");
-        var params = {
-          "key": "LE_aYYhp8kwYt3Yb",
-          "date": document.getElementById("date").value.replace(/\D/g, ""),
-          "time": "0900",
-          "from": document.getElementById("from").value,
-          "to": document.getElementById("to").value,
-          "contentsMode": "sp"
-        };
-        var url = "https://api.ekispert.jp/v1/json/search/course/light"
-          + Object.keys(params).map(function (e) { return [e, params[e]]; }).reduce(function (p, c) { return p + "&" + c[0] + "=" + encodeURIComponent(c[1])  }, "?");
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", url, true);
-        xhr.setRequestHeader("Accept", "application/json")
-        xhr.responseType = "json";
-        xhr.onload = function(e) {
-          if (this.status == 200) {
-            console.log(this.response);
-            var response = typeof this.response == "string" ? JSON.parse(this.response) : this.response;
-            console.log(response.ResultSet.ResourceURI);
-            // var win = window.open(response.ResultSet.ResourceURI);
-            iframe.src = response.ResultSet.ResourceURI.replace(/^http:/, "https:");
-          } else if (this.status == 400) {
-            console.log(this.response);
-            var response = typeof this.response == "string" ? JSON.parse(this.response) : this.response;
-            alert(response.ResultSet.Error.Message)
-          }
-        };
-        xhr.send();
-      });
-    }
-  </script>
+  <link rel="stylesheet" type="text/css" href="./index.css" />
+  <script type="text/javascript" src="./index.js"></script>
 </head>
 <body>
   <form action="">
@@ -105,12 +28,12 @@
           <td><input id="from" name="Kotsu12" type="text" /></td>
           <td><input id="to" name="Kotsu13" type="text" /></td>
           <td><input type="text" /></td>
-          <td><input type="text" /><button type="button" id="search">経路検索</button></td>
+          <td><input type="text" /><button type="button" id="search"><img src="./icon_150050.svg" alt="経路検索" /></button></td>
         </tr>
       </tbody>
     </table>
     <figure id="result" class="hidden">
-      <a class="close" href="#">閉じる</a>
+      <a class="close" href="#"><img src="./icon_119190.svg" alt="閉じる" /></a>
       <iframe src="about:blank" frameborder="0"></iframe>
     </figure>
   </form>
