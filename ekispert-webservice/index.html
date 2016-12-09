@@ -68,9 +68,10 @@
         xhr.onload = function(e) {
           if (this.status == 200) {
             console.log(this.response);
-            console.log(this.response.ResultSet.ResourceURI);
-            // var win = window.open(this.response.ResultSet.ResourceURI);
-            iframe.src = this.response.ResultSet.ResourceURI.replace(/^http:/, "https:");
+            var response = typeof this.response == "string" ? JSON.parse(this.response) : this.response;
+            console.log(response.ResultSet.ResourceURI);
+            // var win = window.open(response.ResultSet.ResourceURI);
+            iframe.src = response.ResultSet.ResourceURI.replace(/^http:/, "https:");
           }
         };
         xhr.send();
