@@ -5,40 +5,108 @@
   <title>モックアップ</title>
   <style type="text/css">
     #result {
-      display: block;
+      position: relative;
+      width: 25em;
+    }
+    #result iframe {
       width: 100%;
-      height: 50em;
+      height: 25em;
+      box-shadow: 1ex 1ex 0.5ex silver;
+      transition-property: height, box-shadow;
+      transition-duration: 1s;
+      transition-timing-function: ease-out;
+      transition-delay: 0.5s;
+    }
+    #result.hidden iframe {
+      height: 0em;
+    }
+    #result .close {
+      position: absolute;
+      right: -1ex;
+      top: -1ex;
+      background-color: rgba(255, 255, 255, .8);
+      transition-property: opacity, visibility;
+      transition-duration: 1s;
+      transition-timing-function: ease-out;
+      transition-delay: 0.5s;
+    }
+    #result.hidden .close {
+      opacity: 0;
+      visibility: hidden;
     }
   </style>
   <script type="text/javascript">
     window.onload = function () {
+      document.getElementById("date").value = new Date().toISOString().substring(0, 10);
+      var figure = document.getElementById("result");
+      var iframe = figure.querySelector("iframe");
+      var a = figure.querySelector(".close");
+      a.addEventListener("click", function (e) {
+        figure.classList.add("hidden");
+      });
+      iframe.addEventListener("load", function (e) {
+        figure.classList.remove("hidden");
+      });
       var button = document.getElementById("search");
       button.addEventListener("click", function (e) {
-          console.log("search");
-          var url = "https://api.ekispert.jp/v1/json/search/course/light?key=LE_aYYhp8kwYt3Yb" + "&from=" + encodeURIComponent(document.getElementById("from").value) + "&to=" + encodeURIComponent(document.getElementById("to").value);
-          var xhr = new XMLHttpRequest();
-          xhr.open('GET', url, true);
-          xhr.responseType = "json";
-          xhr.onload = function(e) {
-            if (this.status == 200) {
-              console.log(this.response);
-              console.log(this.response.ResultSet.ResourceURI);
-              var win = window.open(this.response.ResultSet.ResourceURI);
-              var iframe = document.getElementById("result");
-              iframe.src = this.response.ResultSet.ResourceURI;
-            }
-          };
-          xhr.send();
-      }, false);
+        console.log("search");
+        figure.classList.add("hidden");
+        var params = {
+          "key": "LE_aYYhp8kwYt3Yb",
+          "date": document.getElementById("date").value.replace(/\D/g, ""),
+          "time": "0900",
+          "from": document.getElementById("from").value,
+          "to": document.getElementById("to").value,
+          "contentsMode": "sp"
+        };
+        var url = "https://api.ekispert.jp/v1/json/search/course/light"
+          + Object.keys(params).map(function (e) { return [e, params[e]]; }).reduce(function (p, c) { return p + "&" + c[0] + "=" + encodeURIComponent(c[1])  }, "?");
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", url, true);
+        xhr.responseType = "json";
+        xhr.onload = function(e) {
+          if (this.status == 200) {
+            console.log(this.response);
+            console.log(this.response.ResultSet.ResourceURI);
+            // var win = window.open(this.response.ResultSet.ResourceURI);
+            iframe.src = this.response.ResultSet.ResourceURI.replace(/^http:/, "https:");
+          }
+        };
+        xhr.send();
+      });
     }
   </script>
 </head>
 <body>
   <form action="">
-    <label for="from">出発地</label><input id="from" name="from" type="text" />
-    <label for="to">目的地</label><input id="to" name="to" type="text" />
-    <button type="button" id="search">経路検索</button>
-    <iframe id="result" src="" frameborder="0"></iframe>
+    <label for="date">日付</label>
+    <input id="date" type="date" />
+    <table>
+      <thead>
+        <tr>
+          <th><label>手段</label></th>
+          <th><label>行き先</label></th>
+          <th><label>出発地</label></th>
+          <th><label>到着地</label></th>
+          <th><label>支払先</label></th>
+          <th><label>金額</label></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><select id="" name=""><option value=""></option></select></td>
+          <td><input type="text" /></td>
+          <td><input id="from" name="Kotsu12" type="text" /></td>
+          <td><input id="to" name="Kotsu13" type="text" /></td>
+          <td><input type="text" /></td>
+          <td><input type="text" /><button type="button" id="search">経路検索</button></td>
+        </tr>
+      </tbody>
+    </table>
+    <figure id="result" class="hidden">
+      <a class="close" href="#">閉じる</a>
+      <iframe src="about:blank" frameborder="0"></iframe>
+    </figure>
   </form>
 </body>
 </html>
