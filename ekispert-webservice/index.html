@@ -72,6 +72,10 @@
             console.log(response.ResultSet.ResourceURI);
             // var win = window.open(response.ResultSet.ResourceURI);
             iframe.src = response.ResultSet.ResourceURI.replace(/^http:/, "https:");
+          } else if (this.status == 400) {
+            console.log(this.response);
+            var response = typeof this.response == "string" ? JSON.parse(this.response) : this.response;
+            alert(response.ResultSet.Error.Message)
           }
         };
         xhr.send();
