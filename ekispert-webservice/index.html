@@ -63,6 +63,7 @@
           + Object.keys(params).map(function (e) { return [e, params[e]]; }).reduce(function (p, c) { return p + "&" + c[0] + "=" + encodeURIComponent(c[1])  }, "?");
         var xhr = new XMLHttpRequest();
         xhr.open("GET", url, true);
+        xhr.setRequestHeader("Accept", "application/json")
         xhr.responseType = "json";
         xhr.onload = function(e) {
           if (this.status == 200) {
