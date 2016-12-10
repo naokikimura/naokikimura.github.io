@@ -2,7 +2,9 @@ $(function () {
   $("#date").val((new Date()).toISOString().substring(0, 10));
   $("#result").dialog({
     autoOpen: false,
-    width: "auto"
+    width: "auto",
+    show: { effect: "fade", duration: 700 },
+    hide: { effect: "fade", duration: 700 }
   });
   $("#result iframe").on("load", function (e) {
     console.log("load");
