@@ -10,5 +10,9 @@
   height: 25em;
 }
 .search {
-  width: 2.5em;
+  margin-left: 1ex;
+}
+.search img {
+  width: 1em;
+  height: 1em;
 }
