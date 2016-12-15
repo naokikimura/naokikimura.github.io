@@ -19,7 +19,7 @@ var expGuiStation = function (pObject, config) {
     /*
     * Webサービスの設定
     */
-    var apiURL = "http://api.ekispert.com/";
+    var apiURL = "https://api.ekispert.com/";
 
     /*
     * GETパラメータからキーの設定
